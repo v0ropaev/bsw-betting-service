@@ -1,0 +1,40 @@
+version: "3.8"
+services:
+  line-provider:
+    build: ./line-provider
+    ports:
+      - "8000:8000"
+    environment:
+      - RABBITMQ_HOST=${RABBITMQ_HOST}
+    depends_on:
+      - rabbitmq
+
+  bet-maker:
+    build: ./bet-maker
+    ports:
+      - "8001:8001"
+    environment:
+      - RABBITMQ_HOST=${RABBITMQ_HOST}
+      - POSTGRES_HOST=${DB_HOST}
+    depends_on:
+      - rabbitmq
+      - postgres
+
+  rabbitmq:
+    image: "rabbitmq:3-management"
+    hostname: rabbitmq
+    environment:
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_USER}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASSWORD}
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+  postgres:
+    image: "postgres:13"
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+    ports:
+      - "5433:5433"

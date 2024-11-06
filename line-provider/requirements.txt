@@ -1,0 +1,11 @@
+fastapi
+uvicorn[standard]
+sqlalchemy
+asyncpg
+pydantic
+pydantic-settings
+pytest
+pytest_asyncio
+alembic
+aio_pika
+loguru

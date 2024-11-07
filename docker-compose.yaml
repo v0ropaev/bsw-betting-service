@@ -2,6 +2,7 @@ version: "3.8"
 services:
   line-provider:
     build: ./line-provider
+    container_name: line-provider
     ports:
       - "8000:8000"
     environment:
@@ -17,6 +18,7 @@ services:
 
   bet-maker:
     build: ./bet-maker
+    container_name: bet-maker
     ports:
       - "8001:8001"
     environment:
@@ -34,6 +36,7 @@ services:
 
   rabbitmq:
     image: "rabbitmq:3-management"
+    container_name: rabbitmq
     hostname: rabbitmq
     environment:
       - RABBITMQ_DEFAULT_USER=${RABBITMQ_USER}
@@ -45,16 +48,22 @@ services:
       - bsw-network
 
   postgres:
-    image: "postgres:13"
+    image: bitnami/postgresql:15.1.0
+    container_name: postgres
     environment:
       - POSTGRES_USER=${DB_USER}
       - POSTGRES_PASSWORD=${DB_PASSWORD}
       - POSTGRES_DB=${DB_NAME}
     ports:
-      - "5433:5433"
+      - "5434:5432"
     networks:
       - bsw-network
+    volumes:
+      - bsw-db:/bitnami/postgresql
 
 networks:
   bsw-network:
     external: true
+
+volumes:
+  bsw-db:

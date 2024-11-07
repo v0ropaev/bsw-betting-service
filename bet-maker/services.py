@@ -10,12 +10,14 @@ from models import Event, Bet
 
 
 async def processing_get_events() -> List[EventSchema]:
+    """Getting all events that are still active. (deadline has not passed)"""
     async with Transaction():
         events = await Event.get_events_for_betting()
     return TypeAdapter(list[EventSchema]).validate_python(events)
 
 
 async def processing_create_bet(bet_data: BetSchema) -> BetCreateMessage:
+    """Bet creating."""
     async with Transaction():
         event = await Event.get_event_by_id(bet_data.event_id)
         event = TypeAdapter(list[EventSchema]).validate_python(event)
@@ -31,6 +33,7 @@ async def processing_create_bet(bet_data: BetSchema) -> BetCreateMessage:
 
 
 async def processing_get_bets() -> List[BetSchema]:
+    """Getting all bets"""
     async with Transaction():
         bets = await Bet.get_bets()
     return TypeAdapter(list[BetSchema]).validate_python(bets)

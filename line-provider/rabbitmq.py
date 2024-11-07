@@ -18,7 +18,7 @@ class RabbitMQ:
         )
 
     async def connect(self):
-        """Устанавливаем подключение и создаем очередь и exchange."""
+        """Establish a connection and create a queue and exchange."""
         try:
             self.connection = await aio_pika.connect_robust(self.host)
             self.channel = await self.connection.channel()
@@ -35,18 +35,22 @@ class RabbitMQ:
             raise
 
     async def create_exchange_and_queue(self):
-        """Создаем exchange и queue."""
+        """Creating exchange and queue."""
         try:
-            self.exchange = await self.channel.declare_exchange(self.exchange_name, ExchangeType.FANOUT, durable=True)
+            self.exchange = await self.channel.declare_exchange(
+                self.exchange_name, ExchangeType.FANOUT, durable=True
+            )
             self.queue = await self.channel.declare_queue(self.queue_name, durable=True)
             await self.queue.bind(self.exchange)
-            logger.info(f"Created exchange '{self.exchange_name}' and queue '{self.queue_name}', and bound them together.")
+            logger.info(
+                f"Created exchange '{self.exchange_name}' and queue '{self.queue_name}', and bound them together."
+            )
         except Exception as e:
             logger.error(f"Failed to create exchange and queue: {e}")
             raise
 
     async def send_message(self, message: str):
-        """Отправляет сообщение в exchange."""
+        """Sending message to exchange."""
         if not self.channel or not self.exchange:
             logger.error("Attempted to send message without an active connection.")
             raise ConnectionError("No connection established. Call 'connect' first.")
@@ -61,7 +65,7 @@ class RabbitMQ:
             raise
 
     async def close(self):
-        """Закрывает соединение."""
+        """Closing connection."""
         if self.connection:
             try:
                 await self.connection.close()
@@ -70,10 +74,10 @@ class RabbitMQ:
                 logger.error(f"Failed to close RabbitMQ connection: {e}")
 
     async def __aenter__(self):
-        """Поддержка асинхронного контекстного менеджера для автоматического подключения."""
+        """Supports asynchronous context manager for automatic connection."""
         await self.connect()
         return self
 
     async def __aexit__(self, exc_type, exc, tb):
-        """Поддержка асинхронного контекстного менеджера для автоматического закрытия соединения."""
+        """Support for asynchronous context manager for automatic connection closure."""
         await self.close()

@@ -13,6 +13,7 @@ app.include_router(api_router)
 
 @app.on_event("startup")
 async def startup():
+    """Creating exchange and queue on startup."""
     try:
         await asyncio.sleep(10)
         async with RabbitMQ(

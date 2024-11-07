@@ -14,6 +14,7 @@ from config import settings
 
 
 async def handle_message(message: IncomingMessage):
+    """Handle incoming messages."""
     logger.info(f"Handling message: {message}")
     message_dict = literal_eval(message.body.decode())
     message = MessageSchema(**message_dict)
@@ -29,6 +30,7 @@ async def handle_message(message: IncomingMessage):
 
 
 async def consume_messages():
+    """Consume messages from RabbitMQ."""
     async with RabbitMQ(
         settings.rabbitmq_url,
         settings.RABBITMQ_QUEUE_NAME,

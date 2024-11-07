@@ -19,7 +19,7 @@ class RabbitMQ:
         )
 
     async def connect(self):
-        """Устанавливаем подключение и создаем очередь и exchange."""
+        """Establish a connection and create a queue and exchange."""
         try:
             self.connection = await aio_pika.connect_robust(self.host)
             self.channel = await self.connection.channel()
@@ -35,23 +35,8 @@ class RabbitMQ:
             logger.error(f"Failed to connect to RabbitMQ: {e}")
             raise
 
-    async def send_message(self, message: str):
-        """Отправляет сообщение в exchange."""
-        if not self.channel or not self.exchange:
-            logger.error("Attempted to send message without an active connection.")
-            raise ConnectionError("No connection established. Call 'connect' first.")
-
-        try:
-            await self.exchange.publish(
-                Message(body=message.encode()), routing_key=self.queue_name
-            )
-            logger.info(f"Message sent to exchange: {message}")
-        except Exception as e:
-            logger.error(f"Failed to send message: {e}")
-            raise
-
     async def receive_messages(self, on_message: Callable[[IncomingMessage], Any]):
-        """Получает и обрабатывает сообщения из очереди."""
+        """Receives and processes messages from the queue."""
         if not self.queue:
             logger.error("Attempted to receive messages without an active queue.")
             raise ConnectionError("No queue available. Call 'connect' first.")
@@ -70,7 +55,7 @@ class RabbitMQ:
             raise
 
     async def close(self):
-        """Закрывает соединение."""
+        """Closing connection."""
         if self.connection:
             try:
                 await self.connection.close()
@@ -79,10 +64,10 @@ class RabbitMQ:
                 logger.error(f"Failed to close RabbitMQ connection: {e}")
 
     async def __aenter__(self):
-        """Поддержка асинхронного контекстного менеджера для автоматического подключения."""
+        """Supports asynchronous context manager for automatic connection."""
         await self.connect()
         return self
 
     async def __aexit__(self, exc_type, exc, tb):
-        """Поддержка асинхронного контекстного менеджера для автоматического закрытия соединения."""
+        """Support for asynchronous context manager for automatic connection closure."""
         await self.close()

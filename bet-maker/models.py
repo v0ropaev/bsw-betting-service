@@ -28,7 +28,9 @@ class Event(Base):
     event_id: Mapped[str] = mapped_column(primary_key=True, index=True)
     deadline: Mapped[datetime] = mapped_column(nullable=False)  # type: ignore
     state: Mapped[EventStateLiteral] = mapped_column(
-        Enum("NEW", "FINISHED_WIN", "FINISHED_LOSE", name="eventstate"), default="1", nullable=False
+        Enum("NEW", "FINISHED_WIN", "FINISHED_LOSE", name="eventstate"),
+        default="1",
+        nullable=False,
     )
     coefficient: Mapped[float] = mapped_column(Numeric(10, 2), nullable=False)
 

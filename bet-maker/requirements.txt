@@ -2,6 +2,7 @@ fastapi
 uvicorn[standard]
 sqlalchemy
 asyncpg
+punq
 pydantic
 pydantic-settings
 pytest

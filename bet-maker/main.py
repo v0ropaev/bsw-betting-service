@@ -39,3 +39,9 @@ async def consume_messages():
 
 app = FastAPI()
 app.include_router(api_router)
+
+
+@app.on_event("startup")
+async def on_startup():
+    await asyncio.sleep(15)
+    asyncio.create_task(consume_messages())

@@ -41,7 +41,7 @@ async def update_coefficient(event_id: str, new_coefficient: Decimal) -> Message
 
 
 @router.get("/update_status")
-async def update_status(event_id: str, new_status: int) -> Message:
+async def update_status(event_id: str, new_status: str) -> Message:
     result = await processing_update_status(event_id, new_status)
     return result
 

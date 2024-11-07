@@ -1,7 +1,7 @@
 from decimal import Decimal
 from time import time
 from typing import List
-from schemas import Event, EventState, Message
+from schemas import Event, Message
 from fastapi import HTTPException
 from rabbitmq import RabbitMQ
 from config import settings
@@ -70,13 +70,13 @@ async def processing_update_coefficient(
     raise HTTPException(status_code=404, detail="Event not found")
 
 
-async def processing_update_status(event_id: str, new_status: int) -> Message:
+async def processing_update_status(event_id: str, new_status: str) -> Message:
     """Изменение статуса события."""
     logger.info(f"Updating status for event {event_id}. New status: {new_status}.")
     if event_id in events:
         event = events[event_id]
-        event.state = EventState(new_status)
-        logger.info(f"Status for event {event_id} updated to {EventState(new_status)}.")
+        event.state = new_status
+        logger.info(f"Status for event {event_id} updated to {new_status}.")
         return await send_event_to_rabbitmq(event, "update_status")
     logger.error(f"Event {event_id} not found for status update.")
     raise HTTPException(status_code=404, detail="Event not found")

@@ -34,6 +34,17 @@ class RabbitMQ:
             logger.error(f"Failed to connect to RabbitMQ: {e}")
             raise
 
+    async def create_exchange_and_queue(self):
+        """Создаем exchange и queue."""
+        try:
+            self.exchange = await self.channel.declare_exchange(self.exchange_name, ExchangeType.FANOUT, durable=True)
+            self.queue = await self.channel.declare_queue(self.queue_name, durable=True)
+            await self.queue.bind(self.exchange)
+            logger.info(f"Created exchange '{self.exchange_name}' and queue '{self.queue_name}', and bound them together.")
+        except Exception as e:
+            logger.error(f"Failed to create exchange and queue: {e}")
+            raise
+
     async def send_message(self, message: str):
         """Отправляет сообщение в exchange."""
         if not self.channel or not self.exchange:
@@ -47,24 +58,6 @@ class RabbitMQ:
             logger.info(f"Message sent to exchange: {message}")
         except Exception as e:
             logger.error(f"Failed to send message: {e}")
-            raise
-
-    async def receive_messages(self, on_message: Callable[[IncomingMessage], Any]):
-        """Получает и обрабатывает сообщения из очереди."""
-        if not self.queue:
-            logger.error("Attempted to receive messages without an active queue.")
-            raise ConnectionError("No queue available. Call 'connect' first.")
-
-        async def callback(message: IncomingMessage):
-            async with message.process():
-                logger.info(f"Received message: {message.body.decode()}")
-                await on_message(message)
-
-        try:
-            await self.queue.consume(callback)
-            logger.info("Started consuming messages.")
-        except Exception as e:
-            logger.error(f"Failed to consume messages: {e}")
             raise
 
     async def close(self):

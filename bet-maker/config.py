@@ -8,7 +8,7 @@ class Settings(BaseSettings):
     DB_NAME: str = "bsw-db"
     DB_USER: str = "postgres"
     DB_PASSWORD: str = "postgres"
-    DB_HOST: str = "bsw-db"
+    DB_HOST: str = "postgres"
     DB_PORT: str = "5432"
 
     RABBITMQ_HOST: str = "localhost"

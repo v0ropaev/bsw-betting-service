@@ -11,8 +11,7 @@ class Settings(BaseSettings):
     DB_HOST: str = "postgres"
     DB_PORT: str = "5432"
 
-    RABBITMQ_HOST: str = "localhost"
-    RABBITMQ_PORT: int = 5672
+    RABBITMQ_HOST: str = "rabbitmq:5672"
     RABBITMQ_USER: str = "rabbitmq"
     RABBITMQ_PASSWORD: str = "rabbitmq"
     RABBITMQ_QUEUE_NAME: str = "events"
@@ -36,7 +35,7 @@ class Settings(BaseSettings):
 
     @property
     def rabbitmq_url(self) -> str:
-        return f"amqp://{self.RABBITMQ_USER}:{self.RABBITMQ_PASSWORD}@{self.RABBITMQ_HOST}:{self.RABBITMQ_PORT}/"
+        return f"amqp://{self.RABBITMQ_USER}:{self.RABBITMQ_PASSWORD}@{self.RABBITMQ_HOST}/"
 
     class Config:
         env_file = ".env"

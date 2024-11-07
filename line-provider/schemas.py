@@ -1,21 +1,15 @@
+from datetime import datetime
 from decimal import Decimal
-import enum
-from typing import Optional
+from typing import Literal
 
-from pydantic import BaseModel
-
-
-class EventState(enum.Enum):
-    NEW = 1
-    FINISHED_WIN = 2
-    FINISHED_LOSE = 3
+from pydantic import BaseModel, Field
 
 
 class Event(BaseModel):
     event_id: str
-    coefficient: Optional[Decimal] = None
-    deadline: Optional[float] = None
-    state: Optional[EventState] = None
+    coefficient: Decimal = Field(..., gt=0, max_digits=10, decimal_places=2)
+    deadline: datetime
+    state: Literal["NEW", "FINISHED_WIN", "FINISHED_LOSE"]
 
 
 class Message(Event):

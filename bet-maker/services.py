@@ -23,7 +23,7 @@ async def processing_create_bet(bet_data: BetSchema) -> BetCreateMessage:
             raise HTTPException(
                 status_code=400, detail="The event is not available for betting."
             )
-
+        bet_data.status = "PENDING"
         await Bet.create(bet_data)
     return BetCreateMessage(
         message="The bet has been successfully accepted.", **bet_data.dict()

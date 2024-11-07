@@ -11,7 +11,7 @@ events: dict[str, Event] = {}
 
 
 async def send_event_to_rabbitmq(event: Event, action: str) -> Message:
-    """Отправка сообщения с событием в RabbitMQ и возврат модели сообщения."""
+    """Send a message with an event to RabbitMQ and return a message model."""
     logger.info(f"Sending event {event.event_id} with action '{action}' to RabbitMQ.")
     async with RabbitMQ(
         settings.rabbitmq_url,
@@ -25,7 +25,7 @@ async def send_event_to_rabbitmq(event: Event, action: str) -> Message:
 
 
 async def processing_create_event(event: Event) -> Message:
-    """Создание события."""
+    """Event creating."""
     logger.info(f"Processing create event: {event.event_id}.")
     if event.event_id not in events:
         events[event.event_id] = event
@@ -39,7 +39,7 @@ async def processing_create_event(event: Event) -> Message:
 
 
 async def processing_get_event(event_id: str = None) -> Event:
-    """Получить событие по его идентификатору."""
+    """Getting event by event_id"""
     logger.info(f"Fetching event with ID: {event_id}.")
     if event_id in events:
         logger.info(f"Event {event_id} found.")
@@ -49,7 +49,7 @@ async def processing_get_event(event_id: str = None) -> Event:
 
 
 async def processing_get_events() -> List[Event]:
-    """Получить все события, которые ещё активны (дедлайн не прошёл)."""
+    """Getting all events that are still active. (deadline has not passed)"""
     logger.info("Fetching active events.")
     active_events = list(e for e in events.values() if time() < e.deadline)
     logger.info(f"Found {len(active_events)} active events.")
@@ -59,7 +59,7 @@ async def processing_get_events() -> List[Event]:
 async def processing_update_coefficient(
     event_id: str, new_coefficient: Decimal
 ) -> Message:
-    """Изменение коэффициента для события."""
+    """Changing the coefficient for an event."""
     logger.info(f"Updating coefficient for event {event_id}.")
     if event_id in events:
         event = events[event_id]
@@ -71,7 +71,7 @@ async def processing_update_coefficient(
 
 
 async def processing_update_status(event_id: str, new_status: str) -> Message:
-    """Изменение статуса события."""
+    """Changing the status for an event."""
     logger.info(f"Updating status for event {event_id}. New status: {new_status}.")
     if event_id in events:
         event = events[event_id]
@@ -83,7 +83,7 @@ async def processing_update_status(event_id: str, new_status: str) -> Message:
 
 
 async def processing_update_deadline(event_id: str, new_deadline: float) -> Message:
-    """Изменение дедлайна для события."""
+    """Changing the deadline for an event."""
     logger.info(
         f"Updating deadline for event {event_id}. New deadline: {new_deadline}."
     )

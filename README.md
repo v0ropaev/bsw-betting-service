@@ -32,7 +32,7 @@ This command allows you to log into the container and perform database migration
 | GET   | /update_status | Changing the status for an event.       |
 | GET   | /update_deadline         | Changing the deadline for an event.           |
 
-### Potr 8001
+### Port 8001
 | Method | Route               | Description                                                            |
 | ----- | ------------------ | ------------------------------------------------------------------- |
 | POST  | /event             | Getting all events that are still active. (deadline has not passed)                    |

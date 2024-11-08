@@ -22,6 +22,7 @@ async def handle_message(message: IncomingMessage):
     message_event = EventSchema(**message_dict)
     async with Transaction():
         if message.action == "update_status":
+            await Event.update_event_state(message_event)
             await Bet.update_bet_status(message_event)
             logger.info(f"Updated event status: {message_event}")
         else:

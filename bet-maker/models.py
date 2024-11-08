@@ -13,7 +13,7 @@ from sqlalchemy.orm import relationship, Mapped, mapped_column
 from sqlalchemy.ext.declarative import declarative_base
 from datetime import datetime
 from schemas import Event, Bet
-from transcations import db_session
+from transactions import db_session
 
 Base = declarative_base()
 
@@ -67,11 +67,26 @@ class Event(Base):
     async def get_events_for_betting(cls) -> list[Event]:
         now = datetime.now()
         events = (
-            (await db_session.get().execute(select(Event).filter(Event.deadline > now)))
+            (
+                await db_session.get().execute(
+                    select(Event)
+                    .filter(Event.deadline > now)
+                    .filter(Event.state == "NEW")
+                )
+            )
             .scalars()
             .all()
         )
         return events
+
+    @classmethod
+    async def update_event_state(cls, event: Event) -> None:
+        stmt = (
+            update(Event)
+            .where(Event.event_id == event.event_id)
+            .values(state=event.state)
+        )
+        await db_session.get().execute(stmt)
 
 
 class Bet(Base):

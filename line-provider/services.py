@@ -51,7 +51,7 @@ async def processing_get_event(event_id: str = None) -> Event:
 async def processing_get_events() -> List[Event]:
     """Getting all events that are still active. (deadline has not passed)"""
     logger.info("Fetching active events.")
-    active_events = list(e for e in events.values() if datetime.now() < e.deadline)
+    active_events = list(e for e in events.values() if datetime.now().astimezone() < e.deadline)
     logger.info(f"Found {len(active_events)} active events.")
     return active_events
 

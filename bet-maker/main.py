@@ -8,7 +8,7 @@ from logger import logger
 from schemas import Message as MessageSchema
 from schemas import Event as EventSchema
 from models import Bet, Event
-from transcations import Transaction
+from transactions import Transaction
 from rabbitmq import RabbitMQ
 from config import settings
 

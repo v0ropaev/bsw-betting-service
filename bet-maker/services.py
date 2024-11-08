@@ -3,7 +3,7 @@ from typing import List
 
 from pydantic import TypeAdapter
 from fastapi import HTTPException
-from transcations import Transaction
+from transactions import Transaction
 from schemas import Event as EventSchema
 from schemas import Bet as BetSchema, BetCreateMessage
 from models import Event, Bet

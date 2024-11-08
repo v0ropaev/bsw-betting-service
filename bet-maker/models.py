@@ -13,7 +13,7 @@ from sqlalchemy.orm import relationship, Mapped, mapped_column
 from sqlalchemy.ext.declarative import declarative_base
 from datetime import datetime
 from schemas import Event, Bet
-from transcations import db_session
+from transactions import db_session
 
 Base = declarative_base()
 

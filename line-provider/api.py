@@ -37,21 +37,21 @@ async def get_events() -> List[Event]:
     return result
 
 
-@router.get("/update_coefficient")
+@router.put("/update_coefficient")
 async def update_coefficient(event_id: str, new_coefficient: Decimal) -> Message:
     """Changing the coefficient for an event."""
     result = await processing_update_coefficient(event_id, new_coefficient)
     return result
 
 
-@router.get("/update_status")
+@router.put("/update_status")
 async def update_status(event_id: str, new_status: str) -> Message:
     """Changing the status for an event."""
     result = await processing_update_status(event_id, new_status)
     return result
 
 
-@router.get("/update_deadline")
+@router.put("/update_deadline")
 async def update_deadline(event_id: str, new_deadline: datetime) -> Message:
     """Changing the deadline for an event."""
     result = await processing_update_deadline(event_id, new_deadline)
